@@ -9,12 +9,11 @@
 
 Trabalho final de Algoritmos e Estruturas de dados 2 voltado para o roteamento de veiculos
 
-Como ainda não sabemos a linguagem que nós vamos usar, primeiro sugir fazer uma pesquisa sobre o uso de 
-grafos para roteamento de veiculos
-
 ![graph_from_ufg](images/ufg_graph.png)
 
 Sobre o problema, resume-se em achar melhores rotas para unicos ou multiplos veiculos de entrega. Isso deve levar em conta o grafo da cidade, os atributos dos veiculos de entrega e os atributos dos produtos, além do tempo de entrega necessario. A ideia de resolucao e tentar achar uma heuristica que resolva
+
+![Cacheiro_Viajante_Explicação](https://www.roundtrip.ai/articles/travelling-salesman-problem)
 
 Estamos no momento, na parte de entender as ferramentas relacionadas e como modelar o problema
 
