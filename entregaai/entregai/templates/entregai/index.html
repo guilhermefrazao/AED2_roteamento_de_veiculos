@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EntregaAI</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
+</head>
+<body>
+    <header>
+        <img src="{% static 'images/entregaai.jpeg' %}" alt="Logo EntregaAI" class="logo">
+        <h1>EntregaAI</h1>
+    </header>
+    <div class="container">
+        <div class="maps" id="mapContainer">
+            <button id="prevButton">&lt;</button>
+            <iframe id="mapFrame" src="" frameborder="0"></iframe>
+            <button id="nextButton">&gt;</button>
+        </div>
+        <div class="form">
+            <h2>Configuração do Algoritmo</h2>
+            <form id="algorithmForm" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Executar</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
