@@ -101,7 +101,7 @@ erDiagram
         UUID UUID_deposito PK "Primary Key"
         UUID UUID_location FK "Primary Key, Foreign Key"
         VARCHAR name_deposit
-        "UUID array" products "UUIDs of products"
+        UUID array_products "UUIDs of products"
     }
     
     ENTREGA {
