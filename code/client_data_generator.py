@@ -8,7 +8,7 @@ from faker import Faker
 campus_coords = (-16.603422, -49.265381)  # Latitude e longitude aproximadas
 
 # Definir o raio em metros
-radius = 4000  # 2 km
+radius = 4000  # 4 km
 
 # Coletar o grafo de ruas dentro do raio especificado
 G = ox.graph_from_point(campus_coords, dist=radius, network_type='drive')
@@ -22,16 +22,14 @@ fake = Faker()
 # Função para gerar dados de clientes fictícios
 def generate_fake_clients(nodes, num_clients):
     client_data = []
-    node_ids = list(nodes.index)  # Lista de IDs dos nós
+    node_ids = nodes.index.to_list()  # Lista de IDs dos nós
     for _ in range(num_clients):
-        node_id = random.choice(node_ids)
-        node = nodes.loc[node_id]
+        node = nodes.loc[random.choice(node_ids)]
         client_uuid = str(uuid.uuid4())
         client_name = fake.name()
         client_phone = fake.phone_number()
         client_data.append({
             "uuid": client_uuid,
-            "node_id": node_id,
             "name": client_name,
             "phone": client_phone,
             "x": node['x'],
