@@ -24,6 +24,7 @@ def generate_fake_clients(nodes, num_clients):
     client_data = []
     node_ids = nodes.index.to_list()  # Lista de IDs dos nós
     for _ in range(num_clients):
+        product_name = random.randint(1,num_clients)
         node = nodes.loc[random.choice(node_ids)]
         client_uuid = str(uuid.uuid4())
         client_name = fake.name()
@@ -33,7 +34,8 @@ def generate_fake_clients(nodes, num_clients):
             "name": client_name,
             "phone": client_phone,
             "x": node['x'],
-            "y": node['y']
+            "y": node['y'],
+            "produto_comprado": "product_" + f"{product_name}",
         })
     return client_data
 

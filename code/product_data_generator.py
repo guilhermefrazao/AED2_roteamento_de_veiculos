@@ -18,7 +18,9 @@ def generate_fake_products(num_products):
             "UUID_produto": product_uuid,
             "product_name": product_name,
             "quantity": quantity,
-            "price": price
+            "price": price,
+            "status": "Não entregue",
+            "horário_entrega": "00:00"
         })
     return product_data
 
