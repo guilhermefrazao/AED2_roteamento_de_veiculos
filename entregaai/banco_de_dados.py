@@ -29,16 +29,15 @@ def execute_query(query, params=None):
     finally:
         conn.close()
 
-    
-def update_status(query):
+def update_query(query, params=None):
     conn = connect_db()
     try:
         with conn.cursor() as cur:
-            cur.execute(query)
+            cur.execute(query, params)
             conn.commit()
-            print(f"Status updated for product_name: {query}")
+
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print("Erro ao executar a consulta:", e)
     finally:
-        # Fechar a conexão
         conn.close()
+    
