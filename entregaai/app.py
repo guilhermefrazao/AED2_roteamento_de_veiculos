@@ -2,7 +2,12 @@ import streamlit as st
 import folium
 from streamlit.components.v1 import html
 from route_generator import *
+from banco_de_dados import *
 import random
+import psycopg2
+import pandas as pd
+
+
 
 # Título e Imagem do Projeto
 st.title("EntregaAI")
@@ -16,6 +21,11 @@ num_vehicles = st.sidebar.number_input("Número de Veículos", min_value=1, max_
 num_points = st.sidebar.number_input("Número de Pontos", min_value=1, max_value=20, value=5)
 
 if st.sidebar.button("Executar"):
+    clientes = execute_query(f"SELECT * FROM clients_data ORDER BY RANDOM() LIMIT {num_points*num_vehicles}")
+    print("clientes", clientes)
+    produtos_entregues = []
+    
+
     location_point = (latitude, longitude)
     G = get_graph(location_point)
     depot = random.choice(list(G.nodes))
@@ -36,9 +46,17 @@ if st.sidebar.button("Executar"):
         
         # Adicionar marcadores para os pontos de interesse no mapa
         for j, node in enumerate(points_of_interest, start=1):
+            produtos_entregues.append(clientes[(j*i)-1][-1]) 
+            print("produtos_entregues", produtos_entregues)
+            update = execute_query(f"UPDATE products_data SET status = 'Entregue' WHERE product_name = '{produtos_entregues[(j*i)-1]}'")
+            consulta = execute_query(f"SELECT * FROM products_data WHERE product_name = '{produtos_entregues[(j*i)-1]}'")
+            print("consulta", consulta)
+            retorna = execute_query(f"UPDATE products_data SET status = 'Entregue' WHERE status = 'Não entregue'")
+            print("retornando banco de dados",retorna)
             folium.Marker(location=get_node_coords(G, node, for_map=True), icon=folium.Icon(color=color), popup=f'{j} Ponto').add_to(m)
         
         maps.append(m)
+
     
     # Mapa combinado com todas as rotas
     combined_map = create_combined_map(G, graph_routes, points_of_interest_all_routes, depot)
