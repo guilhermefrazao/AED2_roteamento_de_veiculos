@@ -9,14 +9,18 @@
 ![](https://img.shields.io/badge/Streamlit-brightgreen)
 ![](https://img.shields.io/badge/Neo4j-yellow)
 ![](https://img.shields.io/badge/PostgreSQL-blue)
+![](https://img.shields.io/badge/DBeaver-brown)
 
 # Roteamento de Veículos
 
 ### [Main](#roteamento-de-veiculos) | [Installation](#installation) | [Architecture](#architecture) | [Contributors](#contributors) | [Licence](#licence)
 
-Trabalho final de Algoritmos e Estruturas de Dados 2 voltado para o roteamento de veículos.
+Trabalho final de Algoritmos e Estruturas de Dados 2 e Banco de dados. Resolução do problema de roteamento de veículos.
 
 ![graph_from_ufg](images/ufg_graph.png)
+*UFG - Campus samambaia e proximidades*
+
+Nos modelamos a cidade por meio de um grafo, sendo as ruas as arestas, e os nós as intersecções das ruas. Nesse grafo, rodamos os algoritmos como de Djistraka e A*.
 
 ## Sobre o Problema
 
@@ -24,7 +28,7 @@ O problema de roteamento de veículos (VRP - Vehicle Routing Problem) é um dos 
 
 ### Subvariações do Problema de Roteamento de Veículos
 
-1. **VRP Básico:** Otimização das rotas de veículos sem nenhuma restrição adicional, focando apenas na minimização da distância total percorrida.
+1. **VRP Básico:** Otimização das rotas de veículos sem nenhuma restrição adicional, focando apenas na minimização da distância total percorrida. Nossa solução.
 2. **VRP com Janelas de Tempo (VRPTW):** As entregas devem ser feitas dentro de intervalos de tempo específicos para cada local.
 3. **VRP com Capacidades (CVRP):** Considera a capacidade limitada de carga dos veículos.
 4. **VRP com Múltiplos Depósitos (MDVRP):** Envolve múltiplos pontos de partida e chegada para os veículos.
@@ -38,8 +42,9 @@ O problema de roteamento de veículos (VRP - Vehicle Routing Problem) é um dos 
 - **NetworkX:** Biblioteca Python para a criação, manipulação e estudo da estrutura, dinâmica e funções de grafos complexos.
 - **Folium:** Biblioteca Python para visualização de dados geoespaciais.
 - **Streamlit:** Ferramenta de compartilhamento de dados que facilita a criação de aplicações web interativas.
-- **Neo4j:** Banco de dados de grafos.
-- **PostgreSQL:** Banco de dados relacional.
+- **Neo4j:** Banco de dados de grafos para salvar a modelagem de grafos da cidade.
+- **PostgreSQL:** Banco de dados relacional para gerencia das informações das entregas
+- **DBeaver:** Para se conectar e trabalhar com os bancos de dados de maneira mais facil.
 
 ## Installation
 
@@ -57,99 +62,25 @@ cd AED2_roteamento_de_veiculos
 pip install -r requirements.txt # Instalar dependências Python
 
 code . # Abrir VSCode (opcional)
+
+streamlit run app.py
 ```
 
 
-Make sure you have Python and Git installed
+Tenha certeza de ter git e python instalado. Recomendamos baixar [DBeaver](https://dbeaver.io/download/) para trabalhar com o PostgreSQL. 
+
+Baixe o PostgreSQL e crie um banco de dados, coloque as informações de dbname, user, localhost e etc nos parametros do [banco_de_daos.py](entregaai/banco_de_dados.py). Caso opte pelo uso do DBeaver, faça a conexão e importe os csv em `/data`.
+
+*NOTA*: Os csv foram gerados com dados falsos, por meio de scripts em Python.
 
 ## Modelagem de Dados
-### Modelagem do Banco de Dados Relacional (PostgreSQL)
+#### Modelagem do Banco de Dados Relacional (PostgreSQL)
 
-```mermaid
-erDiagram
-    LOCATION {
-        UUID UUID_location PK "Primary Key"
-        VARCHAR CEP PK "Primary Key"
-        FLOAT x "not null"
-        FLOAT y "not null"
-        VARCHAR country
-        VARCHAR state
-        VARCHAR city
-        VARCHAR bairro
-        VARCHAR street
-        VARCHAR quadra
-        VARCHAR lote
-        VARCHAR numero
-        VARCHAR description
-    }
-    
-    CLIENTE {
-        UUID UUID_cliente PK "Primary Key"
-        UUID UUID_location FK "Foreign Key"
-        VARCHAR name
-        VARCHAR phone
-    }
-    
-    PRODUTO {
-        UUID UUID_produto PK "Primary Key"
-        VARCHAR product_name
-        INT quantity "not null"
-        UUID UUID_deposito FK "Foreign Key"
-    }
-    
-    DEPOSITO {
-        UUID UUID_deposito PK "Primary Key"
-        UUID UUID_location FK "Primary Key, Foreign Key"
-        VARCHAR name_deposit
-        UUID array_products "UUIDs of products"
-    }
-    
-    ENTREGA {
-        UUID UUID_entrega PK "Primary Key"
-        UUID UUID_deposito FK "Foreign Key"
-        UUID UUID_produto FK "Foreign Key"
-        UUID UUID_cliente FK "Foreign Key"
-        UUID UUID_location FK "Foreign Key"
-        VARCHAR placa FK "Foreign Key"
-        DATETIME previsao
-        DATETIME saida_entrega
-    }
-    
-    VEICULO {
-        VARCHAR placa PK "Primary Key"
-        FLOAT max_speed
-        FLOAT max_mass
-        FLOAT max_space
-        FLOAT autonomy
-        FLOAT km_liter
-        INT vehicle_type
-    }
-    
-    "Banco de grafos (Arestas/Ruas)" {
-        FLOAT u PK "Primary Key"
-        FLOAT v PK "Primary Key"
-        FLOAT speed "not null"
-        FLOAT length "not null"
-        VARCHAR name
-        BOOL oneway
-        FLOAT traffic
-    }
-    
-    "Banco de grafos (Nós/Casas)" {
-        FLOAT x PK "Primary Key"
-        FLOAT y PK "Primary Key"
-        INT street_count "not null"
-    }
-    
-    LOCATION ||--o{ CLIENTE: "Fica em"
-    LOCATION ||--o{ DEPOSITO: "Fica em"
-    CLIENTE ||--o{ ENTREGA: "Envia para"
-    DEPOSITO ||--o{ ENTREGA: "Entrega de"
-    PRODUTO ||--o{ ENTREGA: "Inclui"
-    VEICULO ||--o{ ENTREGA: "Realiza"
-    LOCATION ||--o{ ENTREGA: "Destino"
-    "Banco de grafos (Arestas/Ruas)" ||--o{ "Banco de grafos (Nós/Casas)": "Conecta com"
-```
+![Relational Database](images/relational-bd.png)
+
+#### Modelagem com Banco de Dados de Grafos (Neo4j)
+
+![Graph Database](images/graph-bd.png)
 
 ## Info, Links and Others:
 
@@ -157,6 +88,7 @@ erDiagram
 
     .
     ├── code        #code and tests
+    ├── data        # data used in PostgreSQL
     ├── docs        # Reports
     ├── entregaai   #streamlit application
     │   └── static

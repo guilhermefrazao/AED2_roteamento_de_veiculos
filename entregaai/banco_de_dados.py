@@ -5,9 +5,9 @@ import pandas as pd
 def connect_db():
     try:
         conn = psycopg2.connect(
-            dbname="entregaai",  # Nome do banco de dados
-            user="saraiva",    # Usuário
-            password="12345678",  # Senha
+            dbname="dbname",  # Nome do banco de dados
+            user="user",    # Usuário
+            password="password",  # Senha
             host="localhost",   # Host (localhost para local, ou IP/URL do servidor)
             port="5432"         # Porta padrão do PostgreSQL
         )
